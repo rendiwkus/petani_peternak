@@ -329,7 +329,11 @@ begin
       raise exception 'QUANTITY_INVALID' using errcode = '22023';
     end if;
 
-    select coalesce(discount_price, price), stock
+    select coalesce(
+             case when discount_price > 0 and discount_price < price
+                  then discount_price end,
+             price
+           ), stock
       into v_price, v_stock
       from public.products
      where id = v_item.product_id

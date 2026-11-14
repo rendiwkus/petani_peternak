@@ -45,7 +45,7 @@ class ProductModel {
   final String? storeVillage;
   final String? storePhone;
 
-  double get effectivePrice => discountPrice ?? price;
+  double get effectivePrice => hasDiscount ? discountPrice! : price;
   bool get hasDiscount =>
       discountPrice != null && discountPrice! > 0 && discountPrice! < price;
   bool get inStock => stock > 0;
