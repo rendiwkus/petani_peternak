@@ -40,6 +40,7 @@ class AiChatRepository {
   final SupabaseService _supabase;
   final KnowledgeRepository _knowledge;
   final OfflineCacheService _cache;
+  static const _lastSessionKey = 'last_ai_session';
 
   /// System prompt dikunci di Edge Function server; klien tidak boleh
   /// mengirim prompt sistem sendiri.
@@ -68,7 +69,55 @@ class AiChatRepository {
         })
         .select('id')
         .single();
-    return row['id'] as String;
+    final sessionId = row['id'] as String;
+    await _cache.saveMap(
+      AppConstants.boxUserProfile,
+      _lastSessionKey,
+      {'id': sessionId},
+    );
+    return sessionId;
+  }
+
+  String? get lastSessionId {
+    final cached = _cache.getMap(
+      AppConstants.boxUserProfile,
+      _lastSessionKey,
+    );
+    final id = cached?['id']?.toString();
+    return id == null || id.isEmpty ? null : id;
+  }
+
+  Future<List<ChatMessageModel>> fetchLatestMessages() async {
+    final sessionId = lastSessionId;
+    if (sessionId == null) return const [];
+    try {
+      return await fetchMessages(sessionId);
+    } catch (error) {
+      if (_isNetworkError(error)) {
+        return _cachedMessages(sessionId);
+      }
+      rethrow;
+    }
+  }
+
+  String _messagesCacheKey(String sessionId) => 'ai_messages_$sessionId';
+
+  List<ChatMessageModel> _cachedMessages(String sessionId) {
+    return _cache
+        .getList(AppConstants.boxUserProfile, _messagesCacheKey(sessionId))
+        .map(ChatMessageModel.fromJson)
+        .toList();
+  }
+
+  Future<void> saveMessagesCache(
+    String sessionId,
+    List<ChatMessageModel> messages,
+  ) async {
+    await _cache.saveList(
+      AppConstants.boxUserProfile,
+      _messagesCacheKey(sessionId),
+      messages.map((message) => message.toJson()).toList(),
+    );
   }
 
   Future<List<ChatMessageModel>> fetchMessages(String sessionId) async {
@@ -92,6 +141,7 @@ class AiChatRepository {
             await resolveProducts(message.recommendedProductIds);
       }
     }
+    await saveMessagesCache(sessionId, messages);
     return messages;
   }
 

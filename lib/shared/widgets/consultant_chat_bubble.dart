@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_theme.dart';
@@ -12,6 +14,7 @@ class ConsultantChatBubble extends StatelessWidget {
     this.imageUrl,
     this.audioDurationLabel,
     this.onPlayAudio,
+    this.imageBytes,
     this.recommendedProductCards = const [],
   });
 
@@ -19,6 +22,7 @@ class ConsultantChatBubble extends StatelessWidget {
   final String timeLabel;
   final String? messageText;
   final String? imageUrl;
+  final Uint8List? imageBytes;
   final String? audioDurationLabel;
   final VoidCallback? onPlayAudio;
   final List<Widget> recommendedProductCards;
@@ -78,26 +82,33 @@ class ConsultantChatBubble extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (imageUrl != null && imageUrl!.isNotEmpty) ...[
+                  if ((imageUrl != null && imageUrl!.isNotEmpty) ||
+                      imageBytes != null) ...[
                     GestureDetector(
-                      onTap: () => _openImage(context, imageUrl!),
+                      onTap: () {
+                        if (imageUrl != null && imageUrl!.isNotEmpty) {
+                          _openImage(context, imageUrl!);
+                        }
+                      },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: AspectRatio(
                           aspectRatio: 4 / 3,
-                          child: Image.network(
-                            imageUrl!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => Container(
-                              color: AppTheme.surfaceTintGreen,
-                              alignment: Alignment.center,
-                              child: const Icon(
-                                Icons.broken_image_rounded,
-                                color: AppTheme.secondaryGreen,
-                                size: 40,
-                              ),
-                            ),
-                          ),
+                          child: imageBytes != null
+                              ? Image.memory(imageBytes!, fit: BoxFit.cover)
+                              : Image.network(
+                                  imageUrl!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, _, _) => Container(
+                                    color: AppTheme.surfaceTintGreen,
+                                    alignment: Alignment.center,
+                                    child: const Icon(
+                                      Icons.broken_image_rounded,
+                                      color: AppTheme.secondaryGreen,
+                                      size: 40,
+                                    ),
+                                  ),
+                                ),
                         ),
                       ),
                     ),

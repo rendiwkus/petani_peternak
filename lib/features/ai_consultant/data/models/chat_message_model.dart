@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import '../../../../core/constants/app_constants.dart';
 import '../../../marketplace/data/models/product_model.dart';
 
@@ -37,6 +39,9 @@ class ChatMessageModel {
 
   /// Runtime only: true bila jawaban berasal dari cache panduan lokal.
   bool isLocalFallback;
+
+  /// Runtime only: foto lokal sebelum/saat proses unggah.
+  Uint8List? localImageBytes;
 
   bool get isUser => sender == 'user';
   bool get hasImage => (imageUrl ?? '').isNotEmpty;
