@@ -36,7 +36,8 @@ klien. Service role key dan `GEMINI_API_KEY` disimpan sebagai secret Supabase.
 
 Setup server (RLS, RPC, Edge Function) ada di
 [docs/SETUP.md](docs/SETUP.md). Ringkasan kontrol keamanan ada di
-[docs/SECURITY.md](docs/SECURITY.md).
+[docs/SECURITY.md](docs/SECURITY.md). Akun uji dan data seed untuk pengujian ada
+di [docs/TESTING.md](docs/TESTING.md).
 
 ## Struktur
 
