@@ -4,6 +4,12 @@
 .env.*.local
 !.env.example
 
+# Editor / tooling lokal
+.vscode/
+.idea/
+supabase/.temp/
+supabase/.branches/
+
 # Miscellaneous
 *.class
 *.log

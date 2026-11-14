@@ -26,6 +26,19 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!-- Penjelasan izin wajib untuk App Store review. -->
+	<key>NSCameraUsageDescription</key>
+	<string>Kamera dipakai untuk memfoto daun atau ternak yang sakit agar Asisten Tani &amp; Ternak bisa memeriksa.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Mikrofon dipakai untuk bertanya lewat suara karena banyak pengguna lebih nyaman bicara daripada mengetik.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Pengenal suara mengubah pertanyaan yang Anda ucapkan menjadi teks pencarian.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Galeri dipakai untuk memilih foto tanaman atau ternak yang sudah Anda ambil sebelumnya.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Menyimpan foto hasil pemeriksaan tanaman atau ternak ke galeri.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
